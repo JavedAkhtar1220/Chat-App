@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap 4 CSS LINK  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Google Fonts CDN -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+
+    <!-- Custom css link -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="loading">
+        <div class="loader"> 
+            <p>l</p>
+            <p>o</p>
+            <p>a</p>
+            <p>d</p>
+            <p>i</p>
+            <p>n</p>
+            <p>g</p>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top px-5">
+        <a class="navbar-brand" href="#">Chat App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="../Dashboard/dashboard.html"><i class="fa fa-home" aria-hidden="true"></i>
+                        Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="javascript:void(0)"><i class="fa fa-user" aria-hidden="true"></i>
+                        Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" onclick="logout()"> <i class="fa fa-sign-out"
+                            aria-hidden="true"></i>
+                        Logout</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="imgContainer" style="margin-top: 100px;">
+        <div class="picUpload">
+            <button type="file" class="uploadBtn"><i class="fas fa-camera"></i></button>
+            <input type="file" id="inpFile" class="fileInp" accept="image/*" />
+        </div>
+        <img src="" alt="Not uploaded" id="profilePic">
+    </div>
+    <div class="container mt-3 mb-5">
+        <div class="form-group">
+            <label for="user">Full Name</label>
+            <input type="text" class="form-control" id="username" readonly>
+        </div>
+        <div class="form-group">
+            <label for="user">Email</label>
+            <input type="text" class="form-control" id="email" readonly>
+        </div>
+        <div class="form-group">
+            <label for="user">Gender</label>
+            <input type="text" class="form-control" id="gender" readonly>
+        </div>
+        <button class="btn btn-primary form-control" onclick="updateProfile()" id="btnUpdate">Update Profile</button>
+    </div>
+
+    <!-- Friend Requests Modal  -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Friend Requests</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="requestedData">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome CDN  -->
+    <script src="https://kit.fontawesome.com/3bef63a951.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap 4 js CDN  -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!-- Firebase SDK's -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-storage.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        var firebaseConfig = {
+            apiKey: "AIzaSyAFhfZB25re9SFUIAZKHznPa6jadLuO8DU",
+            authDomain: "chat-app-3c5c0.firebaseapp.com",
+            databaseURL: "https://chat-app-3c5c0.firebaseio.com",
+            projectId: "chat-app-3c5c0",
+            storageBucket: "chat-app-3c5c0.appspot.com",
+            messagingSenderId: "687395143253",
+            appId: "1:687395143253:web:c736139f9da69fa8911edc",
+            measurementId: "G-LGZFWC5P6W"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <!-- Custom js link  -->
+    <script src="js/app.js"></script>
+</body>
+
+</html>
